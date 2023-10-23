@@ -1,0 +1,19 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+
+public class DIVIDE {
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader=new BufferedReader(new InputStreamReader(System.in));
+
+        BigInteger a=new BigInteger(reader.readLine());
+        BigInteger b=new BigInteger(reader.readLine());
+        //divide 返回值为 a/b
+        BigInteger[] c = a.divideAndRemainder(b); //返回值为数组，分别为a/b和a%b
+        System.out.println(c[0]);
+        System.out.println(c[1]);
+        //System.out.println(a.mod(b));
+        reader.close();
+    }
+}
