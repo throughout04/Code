@@ -1,0 +1,55 @@
+import java.io.*;
+import java.util.Scanner;
+
+public class differenceMatrix {
+    static final int N=1010;
+    static int[][] arr =new int[N][N],s=new int[N][N];
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
+        String[] str1 = reader.readLine().split(" ");
+
+        int n = Integer.parseInt(str1[0]);
+        int m = Integer.parseInt(str1[1]);
+        int q = Integer.parseInt(str1[2]);
+
+        for (int i = 1; i <= n; i++) {
+            String[] str2 = reader.readLine().split(" ");
+            for (int j = 1; j <= m; j++) {
+                arr[i][j] = Integer.parseInt(str2[j-1]);
+                s[i][j]=arr[i][j]-arr[i][j-1];
+                // 初始化差分数组
+            }
+        }
+
+        for (int x=1;x<=q;x++){
+            String[] str3 = reader.readLine().split(" ");
+            int x1 = Integer.parseInt(str3[0]);
+            int y1 = Integer.parseInt(str3[1]);
+            int x2 = Integer.parseInt(str3[2]);
+            int y2 = Integer.parseInt(str3[3]);
+            int c  =  Integer.parseInt(str3[4]);
+
+            for (int i=x1;i<=x2;i++){
+                s[i][y1]+=c;
+                s[i][y2+1]-=c;
+            }
+
+        }
+
+        for (int i = 1; i <=n ; i++) {
+            for (int j=1;j<=m;j++){
+                arr[i][j]=arr[i][j-1]+s[i][j];
+            }
+        }
+        for (int i=1;i<=n;i++){
+            for (int j=1;j<=m;j++){
+                writer.write(arr[i][j] + " ");
+            }
+            writer.write("\n");
+        }
+        writer.flush();
+        reader.close();
+        writer.close();
+    }
+}
