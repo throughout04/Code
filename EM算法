@@ -1,0 +1,67 @@
+import numpy as np
+from scipy.stats import binom
+
+# 步骤1：随机生成硬币A和B的正面概率
+pA_head = 0.1  # 硬币A正面概率的初始值
+pB_head = 0.9  # 硬币B正面概率的初始值
+
+print("EM算法演示")
+print("是否自己输入数据：1.使用样例2.随机生成")
+print("请输入数字选择：")
+n = int(input())
+
+if n == 1:
+    observations = np.array([
+        [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+        [0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 1, 0, 0, 0, 0, 0, 0],
+        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]
+    ])
+elif n == 2:
+    num_batches = 5
+    num_flips_per_batch = 10
+    observations = np.random.randint(2, size=(num_batches, num_flips_per_batch))
+print(observations)
+
+A_up=0;
+A_down=0;
+B_up=0;
+B_down=0;
+
+num_iterations = 10
+for i in range(num_iterations):
+    print("Iteration", i + 1)
+
+    A_up = 0;
+    A_down = 0;
+    B_up = 0;
+    B_down = 0;
+
+    for obs in observations:
+        up_count = np.sum(obs)
+        down_count = len(obs) - up_count
+        pA_obs = binom.pmf(up_count, len(obs), pA_head)
+        pB_obs = binom.pmf(up_count, len(obs), pB_head)
+
+        total_prob = pA_obs + pB_obs
+        normalized_pA_obs = pA_obs / total_prob
+        normalized_pB_obs = pB_obs / total_prob
+
+        A_up += up_count * normalized_pA_obs;
+        A_down += down_count * normalized_pA_obs
+        B_up += up_count * normalized_pB_obs;
+        B_down += down_count * normalized_pB_obs
+
+    # M步：重新估计硬币类型和正面概率
+    PA = A_up / (A_up + A_down)
+    PB = B_up / (B_up + B_down)
+    pA_head = PA
+    pB_head = 1 - PB
+
+    # 判断硬币类型
+    coin_type = "A" if PA > PB else "B"
+
+    print("硬币类型为：", coin_type)
+    print("硬币A正面概率：", PA)
+    print("硬币B正面概率：", PB)
