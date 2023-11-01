@@ -1,36 +1,21 @@
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args){
+import static java.lang.Math.max;
+
+public class TheLongestSubsequence {
+    static final int N=100010;
+    static int[] a=new int[N],s=new int[N];
+
+    public static void main(String[] args) {
         Scanner scanner=new Scanner(System.in);
-        int n=scanner.nextInt();
-        int[] s=new int[100010];
-        int[] arr=new int[n];
-        for(int i=0;i<n;i++){
-            arr[i]=scanner.nextInt();
+        int n= scanner.nextInt();
+        int r=0;
+        for (int i=0,j=0;i<n;i++){
+            a[i]=scanner.nextInt();
+            s[a[i]]++;
+            while(s[a[i]]>1)--s[a[j++]];
+            r=max(r,i-j+1);
         }
-
-        int res=doublePoint(arr,s,n);
-
-        System.out.print(res);
-
-    }
-
-    private static int doublePoint(int[] arr,int[] s,int n) {
-        int res=0;
-        for(int i=0,j=0;i<n;i++){
-            s[arr[i]]++;
-            while(j < i && s[arr[i]]>1){
-                s[arr[j]]--;
-                j++;
-            }
-            res=Math.max(res,i-j+1);
-        }
-        return res;
+        System.out.println(r);
     }
 }
-
-作者：思思入扣
-链接：https://www.acwing.com/solution/content/18914/
-来源：AcWing
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
