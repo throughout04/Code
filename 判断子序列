@@ -21,3 +21,26 @@ public class JudgmentSubsequence {
         else System.out.println("No");
     }
 }
+
+另：
+import java.util.Scanner;
+
+public class JudgmentSubsequence {
+    static final int N=100010;
+    static int[] a=new int[N],b=new int[N];
+    public static void main(String[] args) {
+        Scanner scanner =new Scanner(System.in);
+        int n=scanner.nextInt();
+        int m=scanner.nextInt();
+
+        for (int i=0;i<n;i++)a[i]=scanner.nextInt();
+        for (int i=0;i<m;i++)b[i]=scanner.nextInt();
+
+        int i=0,j=0;
+        for(;j < m; j++) {
+            if(i < n&& a[i] == b[j])  i++;
+        }
+        if (i==n) System.out.println("Yes");
+        else System.out.println("No");
+    }
+}
