@@ -1,0 +1,147 @@
+import numpy as np
+import math
+
+# 定义数据集
+dataset = np.array([
+    ['sunny', 'hot', 85, 'false', 'No'],
+    ['sunny', 'hot', 90, 'true', 'No'],
+    ['overcast', 'hot', 78, 'false', 'Yes'],
+    ['rain', 'mild', 96, 'false', 'Yes'],
+    ['rain', 'cool', 80, 'false', 'Yes'],
+    ['rain', 'cool', 70, 'true', 'No'],
+    ['overcast', 'cool', 65, 'true', 'Yes'],
+    ['sunny', 'mild', 95, 'false', 'No'],
+    ['sunny', 'cool', 70, 'false', 'Yes'],
+    ['rain', 'mild', 80, 'false', 'Yes'],
+    ['sunny', 'mild', 70, 'true', 'Yes'],
+    ['overcast', 'mild', 90, 'true', 'Yes'],
+    ['overcast', 'hot', 75, 'false', 'Yes'],
+    ['rain', 'mild', 80, 'true', 'No']
+])
+
+# 定义属性名称
+feature_names = ['outlook', 'temperature', 'humidity', 'windy']
+
+# 定义类别名称
+target_name = 'playTennis'
+
+# 根据连续值属性离散化
+def discretize_humidity(humidity):
+    humidity = int(humidity)  # 将湿度属性转换为整数
+    if humidity <= 75:
+        return 'low'
+    else:
+        return 'high'
+
+dataset_discretized = dataset.copy()
+dataset_discretized[:, 2] = [discretize_humidity(int(x)) for x in dataset[:, 2]]
+
+
+def entropy(data):
+    label_counts = {}
+    for sample in data:
+        label = sample[-1]
+        if label in label_counts:
+            label_counts[label] += 1
+        else:
+            label_counts[label] = 1
+
+    entropy = 0.0
+    for count in label_counts.values():
+        prob = count / len(data)
+        entropy -= prob * math.log(prob, 2)
+    return entropy
+
+
+def info_gain(data, feature_idx, threshold):
+
+    left = [sample for sample in data if sample[feature_idx] <= threshold]
+    right = [sample for sample in data if sample[feature_idx] > threshold]
+
+    p_left = len(left) / len(data)
+    p_right = len(right) / len(data)
+    gain = entropy(data) - p_left * entropy(left) - p_right * entropy(right)
+    return gain
+
+
+def choose_best_split(data):
+    best_feature_idx = None
+    best_threshold = None
+    best_gain = 0
+    for feature_idx in range(len(data[0]) - 1):
+        feature_values = set([sample[feature_idx] for sample in data])
+        for value in feature_values:
+            if isinstance(value, int) or isinstance(value, float):
+                thresholds = [value - 0.5, value + 0.5]
+                for threshold in thresholds:
+                    gain = info_gain(data, feature_idx, threshold)
+                    if gain > best_gain:
+                        best_gain = gain
+                        best_feature_idx = feature_idx
+                        best_threshold = threshold
+            else:
+                gain = info_gain(data, feature_idx, value)
+                if gain > best_gain:
+                    best_gain = gain
+                    best_feature_idx = feature_idx
+                    best_threshold = value
+    return best_feature_idx, best_threshold
+
+# 定义节点类
+class Node:
+    def __init__(self, feature_idx=None, threshold=None, left=None, right=None, value=None):
+        self.feature_idx = feature_idx
+        self.threshold = threshold
+        self.left = left
+        self.right = right
+        self.value = value
+
+
+def build_decision_tree(data):
+    if len(set(sample[-1] for sample in data)) == 1:
+        return Node(value=data[0][-1])
+    if len(data[0]) == 1:
+        return Node(value=max(set(sample[-1] for sample in data), key=[sample[-1] for sample in data].count))
+    best_feature_idx, best_threshold = choose_best_split(data)
+    left_data = [sample for sample in data if sample[best_feature_idx] <= best_threshold]
+    right_data = [sample for sample in data if sample[best_feature_idx] > best_threshold]
+    left_subtree = build_decision_tree(left_data)
+    right_subtree = build_decision_tree(right_data)
+    return Node(feature_idx=best_feature_idx, threshold=best_threshold, left=left_subtree, right=right_subtree)
+
+
+decision_tree = build_decision_tree(dataset_discretized)
+
+
+def predict(node, sample):
+    if node.value is not None:
+        return node.value
+    if sample[node.feature_idx] <= node.threshold:
+        return predict(node.left, sample)
+    else:
+        return predict(node.right, sample)
+
+
+
+def print_decision_tree(node, indent="", branch="Root"):
+    if node.value is not None:
+        print(indent + "└── " + branch + "预测结果: " + node.value)
+    else:
+        feature_name = feature_names[node.feature_idx]
+        print(indent + "└── " + branch + "特征 " + feature_name)
+        if feature_name == 'humidity':
+            print(indent + "    ├── 值 == high")
+            print_decision_tree(node.left, indent + "    " * 2, "高湿度")
+            print(indent + "    ├── 值 == low")
+            print_decision_tree(node.right, indent + "    " * 2, "低湿度")
+        else:
+            if isinstance(node.threshold, (int, float)):
+                print(indent + "    ├── 阈值 <= " + str(node.threshold))
+            else:
+                print(indent + "    ├── 值 == " + node.threshold)
+            print_decision_tree(node.left, indent + "    " * 2, "左子树")
+            print_decision_tree(node.right, indent + "    " * 2, "右子树")
+
+
+print_decision_tree(decision_tree)
+
