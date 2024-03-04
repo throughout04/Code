@@ -1,21 +1,26 @@
 import java.util.Scanner;
 
-public class Main{
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        while(n -- != 0){
-            int x = sc.nextInt();
-            int res = 0;
-            while(x != 0){
-                x -= lowbit(x);
-                res ++;
+import static java.lang.Math.max;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        while(n--!=0){
+            int x= scanner.nextInt();
+            int res=0;
+            while(x!=0){
+                x-=lowbit(x);
+                res++;
             }
-            System.out.print(res + " ");
+            System.out.print(res+" ");
         }
     }
-
     public static int lowbit(int x){
-        return x & -x;
+        return x&-x;
     }
 }
+//        注意点：
+//        1.函数的定义：public static int lowbit(int x)
+//        2.int lowbit(int x)，返回x的二进制表示中最低位的1的位置，与x&-x相同。
