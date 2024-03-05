@@ -24,7 +24,7 @@ public class Main {
         list.sort((o1, o2) -> o1.first - o2.first);
         int res=1;
         int rmax=list.get(0).second;
-
+        int r = Integer.MIN_VALUE;
         for (int i=1;i< list.size();i++){
             int l=list.get(i).first;
             int r=list.get(i).second;
