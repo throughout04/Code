@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     static final int N=100010;
@@ -14,17 +11,25 @@ public class Main {
             int r=scanner.nextInt();
             list.add(new Pairs(l,r));
         }
+        
+        //有三种可以实现的方法
+        //1.手动实现sort排序，二分
         sort(list,0,list.size()-1);
+        //2.列表自带的比较方法
         list.sort(new Comparator<Pairs>() {
             @Override
             public int compare(Pairs o1, Pairs o2) {
-                return o1.first-o2.first; 
+                return o1.first-o2.first;
             }
         });
+        //3.Lambda表达式实现自定义排序方m
         list.sort((o1, o2) -> o1.first - o2.first);
+        
         int res=1;
         int rmax=list.get(0).second;
-        int r = Integer.MIN_VALUE;
+        //整数最小值的表示方式:Integer.MIN_VALUE
+//        int r = Integer.MIN_VALUE;
+        
         for (int i=1;i< list.size();i++){
             int l=list.get(i).first;
             int r=list.get(i).second;
@@ -39,30 +44,30 @@ public class Main {
     }
 
     private static void sort(List<Pairs> list,int left,int right) {
-        if (left >= right)
+        if (left >= right)          // 递归终止条件,当只剩一个元素时
             return;
 
         int x = (list.get(left).first+list.get(right).first)>> 1;
-        int i = left - 1;
-        int j = right + 1;
+        int i = left - 1;               // 左边界扩大1个单位
+        int j = right + 1;          // 右边界扩大1个单位
 
         while (i < j) {
             do {
-                i++;
+                i++;                    // 找到第一个大于等于中值x的数
             } while (list.get(i).first < x);
 
             do {
-                j--;
+                j--;                    // 找到第一个小于等于中值x的数
             } while (list.get(j).first > x);
 
-            if (i < j) {
+            if (i < j) {                // 交换两数
                 Pairs temp = list.get(i);
                 list.set(i, list.get(j));
                 list.set(j, temp);
             }
         }
-        sort(list,left ,j);
-        sort(list,j+1,right);
+        sort(list,left ,j);             // 递归调用
+        sort(list,j+1,right);       // 递归调用
     }
 }
 
