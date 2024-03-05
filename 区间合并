@@ -1,36 +1,69 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
 
-public class Main{
-    private static int N = 100010;
-    private static int[] a;
-    private static ArrayList<int[]> list = new ArrayList();
-    public static void main(String[] args){
+public class Main {
+    static final int N=100010;
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        for(int i = 0;i < n;i++){
-            a = new int[2];
-            a[0] = scanner.nextInt();
-            a[1] = scanner.nextInt();
-            list.add(a);
+        int n=scanner.nextInt();
+        List<Pairs> list = new ArrayList<>();
+        for (int i=0;i<n;i++){
+            int l=scanner.nextInt();
+            int r=scanner.nextInt();
+            list.add(new Pairs(l,r));
         }
-        //对列表中每个数组0位置元素升序排序
-        list.sort(new Comparator<int[]>(){
-            @Override
-            public int compare(int[] o1,int[] o2){
-                return o1[0] - o2[0];
-            }
-        });
-        int k = 0;
-        int r = Integer.MIN_VALUE;
-        for(int a[] : list){
-            //下一个区间左端点大于老区间右端点
-            if(a[0] > r){
-                k++;
-            }
-            //更新右端点
-            r = Math.max(r,a[1]);
-        }
+        sort(list,0,list.size()-1);
+        int res=1;
+        int rmax=list.get(0).second;
 
-        System.out.println(k);
+        for (int i=1;i< list.size();i++){
+            int l=list.get(i).first;
+            int r=list.get(i).second;
+            if (l>rmax){
+                res++;
+                rmax=r;
+            }else {
+                if (r>rmax)rmax=r;
+            }
+        }
+        System.out.println(res);
+    }
+
+    private static void sort(List<Pairs> list,int left,int right) {
+        if (left >= right)
+            return;
+
+        int x = (list.get(left).first+list.get(right).first)>> 1;
+        int i = left - 1;
+        int j = right + 1;
+
+        while (i < j) {
+            do {
+                i++;
+            } while (list.get(i).first < x);
+
+            do {
+                j--;
+            } while (list.get(j).first > x);
+
+            if (i < j) {
+                Pairs temp = list.get(i);
+                list.set(i, list.get(j));
+                list.set(j, temp);
+            }
+        }
+        sort(list,left ,j);
+        sort(list,j+1,right);
+    }
+}
+
+class Pairs{
+    int first;
+    int second;
+    Pairs(int first,int second){
+        this.first=first;
+        this.second=second;
     }
 }
