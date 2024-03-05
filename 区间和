@@ -12,7 +12,7 @@ public class Main {
         int n=scanner.nextInt();
         int m=scanner.nextInt();
         ArrayList<Integer> alls = new ArrayList<>();
-        ArrayList<Pairs> add = new ArrayList<>();       //使用Pairs类，该类包含两个int属性，类似c语言中的结构
+        ArrayList<Pairs> add = new ArrayList<>();               //使用Pairs类，该类包含两个int属性，类似c语言中的结构
         ArrayList<Pairs> query = new ArrayList<>();
 
         for(int i=0;i<n;i++){
@@ -31,26 +31,35 @@ public class Main {
         }
 
         alls=new ArrayList<>(new HashSet<>(alls));              //将List类型的alls转化为HashSet,自动去重。再转换回List，方便操作
-        Collections.sort(alls);             //
+        Collections.sort(alls);
 
         for (Pairs item:add){
-            int x=find(item.first,alls);
-            a[x]+=item.second;
+            int x=find(item.first,alls);                //找出需要赋值的坐标在alls里面的相对位置，此处可实现alls数组和a数组的映射关系
+            a[x]+=item.second;                      //赋值
         }
 
-        for (int i=1;i<= alls.size();i++)s[i]=s[i-1]+a[i];
+        for (int i=1;i<= alls.size();i++)s[i]=s[i-1]+a[i];          //实现前缀和数组，同时实现s数组和a数组的映射关系，映射传递；
 
         for (Pairs item:query){
             int l=find(item.first,alls);
             int r=find(item.second,alls);
-            System.out.println(s[r]-s[l-1]);
+            System.out.println(s[r]-s[l-1]);                    //运用前缀和输出结果
         }
 
     }
 
-    private static int find(int x, ArrayList<Integer> alls) {
-      int l=0;
-      int r=alls.size();
+    static int find(int x,List<Integer>list){       //二分查找
+        int l=0;
+        int r=list.size()-1;
+        while(l<r){
+            int mid=l+r>>1;
+            if (list.get(mid)>=x){                      //判断区间中值和待查找的数的关系，如果区间中值大于等于待查找的数，即左边区域符合要求，就把中值设置为右边界
+                r=mid;                                      //不加1或者减1的理由是中值可能等于待查找值，此时应不变
+            }else {
+                l=mid+1;                                //如果区间中值小于待查找的数，即右边区域符合要求，就把中值设置为左边界。因为是小于，所以加一才有可能等于要求值，相当于缩减范围
+            }
+        }
+        return l+1;
     }
 }
 class Pairs{                //定义Pairs类，该类包含两个int属性，类似c语言中的结构
@@ -61,4 +70,3 @@ class Pairs{                //定义Pairs类，该类包含两个int属性，类
         this.second=second;
     }
 }
-
