@@ -10,40 +10,44 @@ public class Main {
         String str = scanner.nextLine();
         int len=str.length();
         HashMap<Character, Integer> map = new HashMap<>();
+        
+        //优先级
         map.put('+', 1);
         map.put('-', 1);
         map.put('*', 2);
         map.put('/', 2);
         map.put('(', 0);
+        
         for (int i = 0; i < len; i++) {
             char c = str.charAt(i);
-            if(Character.isDigit(c)){
+            if(Character.isDigit(c)){               //如果是数字
                 int x=0,j=i;
                 while (j<len&&Character.isDigit(str.charAt(j))){
                     x=x*10+str.charAt(j)-'0';
                     j++;
                 }
                 num.push(x);
-                i=j-1;
+                i=j-1;                          //因为下标从0开始，第三个字符对应下标为2，所以需要减一
             }else if (str.charAt(i)=='('){
                 op.push('(');
             }else if (str.charAt(i)==')'){
-                while (op.peek()!='(')calculate(num,op);
+                while (op.peek()!='(')calculate();                //计算直到遇到左括号
                 op.pop();
             }else if (op.isEmpty()){
                 op.push(str.charAt(i));
             }else {
+                //比较优先级,当运算符栈的首字符优先级大于或等于待读取的字符的时，类似先遇到乘除后遇到加减，此时应该先计算乘除
                 while (!op.isEmpty()&&map.get(op.peek())>=map.get(str.charAt(i))){
-                    calculate(num,op);
+                    calculate();
                 }
                 op.push(str.charAt(i));
             }
         }
-        while (op.size() > 0) calculate(num, op);
+        while (op.size() > 0) calculate();
         System.out.print(num.peek());
     }
 
-    private static void calculate(Stack<Integer> num, Stack<Character> op) {
+    private static void calculate() {
         int a = num.pop();
         int b = num.pop();
         char c = op.pop();
