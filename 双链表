@@ -3,25 +3,32 @@ import java.util.Scanner;
 public class Main {
     static int N=100010;
     static int []e=new int[N];
-    static int [] r =new int[N];
-    static int [] l =new int[N];
+    static int [] r =new int[N];            //存储链表结点指向的后一个结点的信息
+    static int [] l =new int[N];            //存储链表结点指向的前一个结点的信息
     static int idx;
 
-    static void init() {
+    static void init() {                        //初始化
+        //初始化链表，有两个空结点，下标分别是0和1，0结点的右边是1,1结点的左边是0
+        //和单链表不同的是，0节点处于首结点的左边，1节点处于尾结点的右边
         r[0]=1;
         l[1]=0;
+        //新结点下标从2开始
         idx=2;
     }
     static void add(int k,int x) {
+        //先完善新结点的信息，数据域、左右指针
         e[idx]=x;
         r[idx]= r[k];
         l[idx]=k;
+        //完善旧结点的信息，因为新结点只和k结点有关系，而要获取到k结点的下个结点的信息必须依靠k结点
+        //因此先修改下个结点的前一个结点的连接，再修改k结点的后一个结点的连接
         l[r[k]]=idx;
         r[k]=idx;
         idx++;
     }
 
     static void remove(int k) {
+        //不分先后顺序
         l[r[k]]= l[k];
         r[l[k]]= r[k];
     }
@@ -35,25 +42,27 @@ public class Main {
             char op1=op.charAt(0);
             if (op1=='L') {
                 int x=sc.nextInt();
-                add(0,x);
+                add(0,x);               //0结点作为首空结点，添加首结点实际是在0节点右边添加，所以k为0
             } else if (op1=='R') {
                 int x=sc.nextInt();
-                add(l[1],x);
+                //1结点作为尾空结点，添加尾结点实际是在1结点左边(当前非空尾结点的右边)添加，但不知道当前非空尾结点的位置
+                //于是根据不变的尾空结点(即下标为1的结点)，寻找其左边的结点，就是当前非空尾结点
+                add(l[1],x);                
             } else if (op1=='D') {
                 int k=sc.nextInt();
-                remove(k+1);
+                remove(k+1);            //第一个插入的结点下标为2，有1的差值
             } else {
                 char op2=op.charAt(1);
                 int k=sc.nextInt();
                 int x=sc.nextInt();
                 if (op2=='L') {
-                    add(l[k+1],x);
+                    add(l[k+1],x);          //插入实际上是右插，在某结点的左边插入，就要寻找该结点的上一个结点
                 } else {
-                    add(k+1,x);
+                    add(k+1,x);         //简单插入，注意下标
                 }
             }
         }
-        for(int i=r[0];i!=1;i=r[i]) {
+        for(int i=r[0];i!=1;i=r[i]) {       //非空首节点是首空节点的左边，所以是r[0];非空尾结点是尾空结点的右边，尾空结点的下标为1，所以不等于1；
             System.out.print(e[i]+" ");
         }
     }
