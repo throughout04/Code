@@ -1,20 +1,20 @@
 import java.util.Scanner;
 
 public class Main {
-    static int head;
+    static int head;                // 链表的头
     static int N=100010;
     static int []n=new int[N];
     static int []ne=new int[N];
-    static int idx;
+    static int idx;                 // 索引，记录插入结点的下标，结点之间的连接数是数组的下标。ne数组指向n数组的下标
 
     static void init() {
-        head=-1;
-        idx=0;
+        head=-1;                    // 头指针  
+        idx=0;                          // 初始化索引为0，即第一个插入的结点的下标为0；
     }
     static void addHead(int x) {
-        n[idx] =x;
-        ne[idx]=head;
-        head=idx;
+        n[idx] =x;                  //创建一个新的结点，下标为idx，值为x
+        ne[idx]=head;           //将新结点的下一个指针指向原来的头指针
+        head=idx;                  //将原来的头指针指向新结点
         idx++;
     }
 
@@ -23,9 +23,12 @@ public class Main {
     }
 
     static void add(int k,int x){
-        n[idx]=x;
-        ne[idx]=ne[k];
+        //先完善新结点的信息，包括数据和指向的下一个结点
+        n[idx]=x;                  
+        ne[idx]=ne[k];           //将新结点的下一个指针指向原来k结点的下一个结点
+        //再完善新结点和K节点之间的联系
         ne[k]=idx;
+        
         idx++;
     }
     public static void main(String[] args) {
@@ -33,8 +36,8 @@ public class Main {
         int nn=scanner.nextInt();
         init();
         while (nn--!=0){
-            String s=scanner.next();
-            char m=s.charAt(0);
+            String s=scanner.next();            //scanner.next()读取字符串,遇到空格停止；scanner,nextLine()读取一行，遇到换行停止
+            char m=s.charAt(0);                     //获取字符串第一个字符，scanner无法直接读入字符串，但可以通过读入字符串来获取字符，使用charAt()；串
             if(m=='H'){
                 int x=scanner.nextInt();
                 addHead(x);
@@ -51,7 +54,8 @@ public class Main {
                 add(k-1,x);
             }
         }
-        for (int i = head; i != -1; i = ne[i]) {
+        //i首先等于首结点的下标，根据ne[i]指向下一个结点，当i==-1时(-1的空结点不会消失，而是存在链表末尾)，即遍历到最后的空结点。
+        for (int i = head; i != -1; i = ne[i]) {            
             System.out.print(n[i] + " ");
         }
     }
