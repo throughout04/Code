@@ -1,73 +1,58 @@
-import java.io.*;
 import java.util.Scanner;
 
 public class Main {
-    private static int N = 100010;  // 数据规模为 10w
+    static int head;
+    static int N=100010;
+    static int []n=new int[N];
+    static int []ne=new int[N];
+    static int idx;
 
-    private static int head;                // 表示头结点的下标
-    private static int[] e = new int[N];    // 表示结点 i的值
-    private static int[] ne = new int[N];   // 表示结点 i的 next指针是多少
-    private static int idx;                 // 表示存储当前结点已经使用结点的下一个结点
-
-    // 初始化数据
-    private static void init() {
-        head = -1;  // 没有头结点
-        idx = 0;    // 没有存入数据
+    static void init() {
+        head=-1;
+        idx=0;
     }
-
-    // 将 val插到头结点
-    private static void addToHead(int val) {
-        e[idx] = val;   // 赋值
-        ne[idx] = head; // 插入之前头结点的前面
-        head = idx;     // 更新头结点信息
-        idx++;          // idx向右移动
-    }
-
-    // 将下标是 k的点后面的点删掉
-    private static void remove(int k) {
-        ne[k] = ne[ne[k]];  // 让下标为 k的结点指向 下个结点的下个结点
-    }
-
-    // 将 val插入下标为 k的点的后面
-    private static void add(int k, int val) {
-        e[idx] = val;
-        ne[idx] = ne[k];
-        ne[k] = idx;
+    static void addHead(int x) {
+        n[idx] =x;
+        ne[idx]=head;
+        head=idx;
         idx++;
     }
 
-    // 程序入口
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        int m = Integer.parseInt(reader.readLine());
+    static void remove(int k) {
+        ne[k]=ne[ne[k]];
+    }
 
-        init();     // 初始化操作
-
-        // 进行 m次操作
-        while (m-- > 0) {
-            String[] s = reader.readLine().split(" ");
-
-            if (s[0].equals("H")) {  // 插入头结点操作, 不能使用 ==, 要使用 equals()
-
-                int val = Integer.parseInt(s[1]);
-                addToHead(val);
-            } else if (s[0].equals("I")) {   // 普通插入操作
-                int k = Integer.parseInt(s[1]);
-                int val = Integer.parseInt(s[2]);
-                add(k - 1, val);    // 第 k个结点的下标为 k-1, 所以插入到下标为 k-1结点的后面
-            } else {    // s[0] == "D", 删除操作
-                int k = Integer.parseInt(s[1]);
-
-                if (k == 0) {  // 题意: k = 0, 删除头结点
-                    head = ne[head];
-                } else
-                    remove(k - 1);  // 第 k个结点的下标为 k-1, 所以是删除到下标为 k-1后面的后面
+    static void add(int k,int x){
+        n[idx]=x;
+        ne[idx]=ne[k];
+        ne[k]=idx;
+        idx++;
+    }
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int nn=scanner.nextInt();
+        init();
+        while (nn--!=0){
+            String s=scanner.next();
+            char m=s.charAt(0);
+            if(m=='H'){
+                int x=scanner.nextInt();
+                addHead(x);
+            } else if (m=='D'){
+                int k=scanner.nextInt();
+                if (k==0){
+                    head=ne[head];
+                } else{
+                    remove(k-1);
+                }
+            } else{
+                int k=scanner.nextInt();
+                int x=scanner.nextInt();
+                add(k-1,x);
             }
         }
-
-        // 打印输出
         for (int i = head; i != -1; i = ne[i]) {
-            System.out.print(e[i] + " ");
+            System.out.print(n[i] + " ");
         }
     }
 }
