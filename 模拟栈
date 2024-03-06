@@ -1,0 +1,40 @@
+import java.util.Scanner;
+
+public class Main {
+    static int []s=new int[100010];
+    static int top=0;
+    static void push(int x) {
+        s[++top]=x;
+    }
+    static void pop() {
+        top--;
+    }
+    static void empty() {
+        if (top==0) {
+            System.out.println("YES");
+        } else {
+            System.out.println("NO");
+        }
+    }
+    static int query() {
+        return s[top];
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        while (n--!=0){
+            String s = scanner.next();
+            if (s.equals("push")) {
+                int x = scanner.nextInt();
+                push(x);
+            } else if (s.equals("pop")) {
+                pop();
+            } else if (s.equals("empty")) {
+                empty();
+            } else if (s.equals("query")) {
+                System.out.println(query());
+            }
+        }
+    }
+}
