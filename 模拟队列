@@ -1,0 +1,28 @@
+import java.io.*;
+import java.util.Scanner;
+
+public class Main{
+    static int m;
+    static int N = 100010;
+    static int[] q = new int[N];
+    static int last = 0, front = -1;
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int m = scanner.nextInt();
+        while(m -- > 0){
+            int x;
+            String s=scanner.next();
+            if(s.equals("push")){
+                x=scanner.nextInt();
+                q[++front] = x;
+            }else if(s.equals("pop")){
+                last++;
+            }else if(s.equals("empty")){
+                if(last <= front) System.out.println("NO");
+                else System.out.println("YES");
+            }else{
+                System.out.println(q[last]);
+            }
+        }
+    }
+}
