@@ -1,0 +1,23 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Main {
+    public static void main(String[] args) {
+        Stack<Integer> stack = new Stack<>();
+        Scanner scanner = new Scanner(System.in);
+        int n=scanner.nextInt();
+        for (int i = 0; i < n; i++) {
+            int x=scanner.nextInt();
+            while(!stack.isEmpty() && stack.peek()>=x){
+                stack.pop();
+            }
+            if (!stack.isEmpty()){
+                System.out.print(stack.peek()+" ");
+                stack.push(x);
+            }else{
+                System.out.print("-1 ");
+                stack.push(x);
+            }
+        }
+    }
+}
