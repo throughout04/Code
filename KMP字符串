@@ -1,7 +1,5 @@
 import java.io.*;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Scanner;
+
 
 public class Main {
     static final int N = 1000010;
@@ -10,6 +8,7 @@ public class Main {
     static int[]next =new int[N];
 
     public static void main(String[] args) throws IOException {
+        //使用字符流的原因：1.相对于string类，字符流的性能更高 2.字符流可以读取中文字符，而string类不能3.字符流可以读入较多的字符
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
 
@@ -17,7 +16,7 @@ public class Main {
         String P= reader.readLine();
         char[] p = new char[n + 1];
         for (int i = 1; i <= n; i++) {
-            p[i] = P.charAt(i-1);
+            p[i] = P.charAt(i-1);       //将匹配字符串转化为字符数组
         }
 
         int m = Integer.parseInt(reader.readLine());
@@ -27,18 +26,18 @@ public class Main {
         for (int i = 1; i <= m; i++)
             s[i] = S.charAt(i - 1);
 
-        for (int i=2,j=0;i<=n;i++){
-            while(j!=0&&p[i]!=p[j+1])j=next[j];
-            if(p[i]== p[j+1])j++;
-            next[i]=j;
+        for (int i=2,j=0;i<=n;i++){         //从2开始:因为要用第二个字符和第一个字符比较；
+            while(j!=0&&p[i]!=p[j+1])j=next[j];         //将上面的待匹配的串和j前面的字符相比较，如果不相等，j回退到next[j]的位置
+            if(p[i]== p[j+1])j++;             //如果相等，j前进一位，就代表匹配成功，上面的串的那个字母和下面的字母相同，所以j前进一位
+            next[i]=j;          //既然匹配成功了(匹配为0也是成功的一种表现)，那就可以将next[i]赋值为j
         }
 
         for (int i=1,j=0;i<=m;i++){
             while (j!=0&&s[i]!= p[j+1])j=next[j];
             if(s[i]== p[j+1])j++;
-            if(j==n){
+            if(j==n){           //如果j==n，说明匹配成功，输出i-n
                 writer.write((i-n)+" ");
-                j=next[j];
+                j=next[j];              //j回退到next[j]的位置，此时j=0，继续往后匹配j
             }
         }
         writer.flush();
