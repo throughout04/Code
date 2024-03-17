@@ -2,7 +2,9 @@ import java.util.Scanner;
 
 public class Main {
     static final int N=100010;
-    static int [][] trie=new int[N][26];
+    static int [][] trie=new int[N][26];        //trie可以理解为拆分整体后将单个元素作为节点构成的树，方便处理单个元素
+    //trie[i][j]表示第i个节点的第j个子节点,英文字母有26个，所以是int[N][26]
+    //至于为什么是使用int类型：1.方便结点值的表示(idx++，idx表示这是第几个节点)和连接。2.cnt数组也不能以字母作为下标
     static int[] cnt=new int[N];
 
     static int idx=0;
@@ -12,34 +14,34 @@ public class Main {
         int n = scanner.nextInt();
 
         for (int i = 0; i < n; i++) {
-           String op= scanner.next();
-           String str= scanner.next();
-           if (op.equals("I")){
-               insert(str);
-           }else {
-               System.out.println(query(str));
-           }
+            String op= scanner.next();
+            String str= scanner.next();
+            if (op.equals("I")){        //插入
+                insert(str);
+            }else {
+                System.out.println(query(str));
+            }
         }
     }
-
+    private static void insert(String str) {        
+        int p=0;
+        for (int i=0;i<str.length();i++){
+            int u=str.charAt(i)-'a';            //将字符元素转化为数字
+            if (trie[p][u]==0)trie[p][u]=++idx;         //没有这个节点就插入，新节点的值递增
+            p=trie[p][u];       //移动指针p,指向下一个节点
+        }
+        cnt[p]++;       //此时p指针移动到最后一个节点，此时的p是最后一个节点的值(该值由idx赋予)，cnt[p]加一
+    }
     private static int query(String str) {
         int p=0;
         for (int i=0;i<str.length();i++){
             int u=str.charAt(i)-'a';
-            if (trie[p][u]==0)return 0;
-            p=trie[p][u];
+            if (trie[p][u]==0)return 0;                //当这个字符串的任意一个字符匹配中断，就表示没有记录这个单词，返回0
+            p=trie[p][u];       //移动指针p
         }
-        return cnt[p];
+        return cnt[p];         //返回最后一个节点的cnt
     }
 
-    private static void insert(String str) {
-        int p=0;
-        for (int i=0;i<str.length();i++){
-            int u=str.charAt(i)-'a';
-            if (trie[p][u]==0)trie[p][u]=++idx;
-            p=trie[p][u];
-        }
-        cnt[p]++;
-    }
+
 
 }
