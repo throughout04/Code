@@ -1,0 +1,45 @@
+import java.util.Scanner;
+
+public class Main {
+    static final int N=100010;
+    static int [][] trie=new int[N][26];
+    static int[] cnt=new int[N];
+
+    static int idx=0;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+
+        for (int i = 0; i < n; i++) {
+           String op= scanner.next();
+           String str= scanner.next();
+           if (op.equals("I")){
+               insert(str);
+           }else {
+               System.out.println(query(str));
+           }
+        }
+    }
+
+    private static int query(String str) {
+        int p=0;
+        for (int i=0;i<str.length();i++){
+            int u=str.charAt(i)-'a';
+            if (trie[p][u]==0)return 0;
+            p=trie[p][u];
+        }
+        return cnt[p];
+    }
+
+    private static void insert(String str) {
+        int p=0;
+        for (int i=0;i<str.length();i++){
+            int u=str.charAt(i)-'a';
+            if (trie[p][u]==0)trie[p][u]=++idx;
+            p=trie[p][u];
+        }
+        cnt[p]++;
+    }
+
+}
