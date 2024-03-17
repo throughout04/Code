@@ -1,6 +1,10 @@
 import java.util.Scanner;
 import java.util.Stack;
 
+//给定一个长度为 N 的整数数列，输出每个数左边第一个比它小的数，如果不存在则输出 −1。
+
+//区别于滑动窗口，题目对范围的限制是左边全部，所以只需要用一个栈来维护(栈的进出相对困难)。
+//输出左边第一个比它小的数，那就是输出栈中自上往下第一个比它小的数
 public class Main {
     public static void main(String[] args) {
         Stack<Integer> stack = new Stack<>();
@@ -8,11 +12,11 @@ public class Main {
         int n=scanner.nextInt();
         for (int i = 0; i < n; i++) {
             int x=scanner.nextInt();
-            while(!stack.isEmpty() && stack.peek()>=x){
+            while(!stack.isEmpty() && stack.peek()>=x){//栈不为空且且弹出所有比当前的数大的栈内元素
                 stack.pop();
             }
             if (!stack.isEmpty()){
-                System.out.print(stack.peek()+" ");
+                System.out.print(stack.peek()+" ");//此时栈顶元素就是第一个比当前数小的
                 stack.push(x);
             }else{
                 System.out.print("-1 ");
