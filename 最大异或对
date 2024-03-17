@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+//上题是将字符串拆分为字符；此题是将数字拆分为二进制形式
 public class Main {
     static final int N=100010;
     static int [][] trie=new int[31*N][2];
@@ -21,30 +21,32 @@ public class Main {
         System.out.println(res);
     }
 
+    private static void insert(int x) {
+        int p=0;
+        for (int i=30;i>=0;i--){            //由高到低获取该位的数字，建立trie树
+            int u=x>>i&1;
+            if (trie[p][u]==0)trie[p][u]=++idx;         //构建二进制的trie树
+            p=trie[p][u];
+        }
+    }
+
     private static void query(int x ) {
         int p=0;
         int sum=0;
         for (int i=30;i>=0;i--){
             int u=x>>i&1;
-            if (trie[p][u^1]!=0){
-                sum=sum*2+1;
+            if (trie[p][u^1]!=0){           //因为要求的是异或的最大值，所以寻找这个位置有没有相异或的数
+                sum=sum*2+1;            //有的话就顺着那条路走，能够异或为1就异或，因为从高往低异或，数字大小以此减少
                 p=trie[p][u^1];
             }
             else {
-                sum=sum*2+0;
+                sum=sum*2+0;            //没有的话就只能顺着这条路走了，只能填0；
                 p=trie[p][u];
             }
         }
         res=res>sum?res:sum;
     }
 
-    private static void insert(int x) {
-        int p=0;
-        for (int i=30;i>=0;i--){
-            int u=x>>i&1;
-            if (trie[p][u]==0)trie[p][u]=++idx;
-            p=trie[p][u];
-        }
-    }
+
 
 }
