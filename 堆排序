@@ -1,0 +1,46 @@
+import java.util.Scanner;
+
+public class Main {
+    static int N=100010;
+
+    static int []a=new int[N];
+
+    static int r=0;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n=scanner.nextInt();
+        int m=scanner.nextInt();
+
+        r=n;
+
+        for (int i=1;i<=n;i++){
+            a[i]=scanner.nextInt();
+        }
+        for (int i=n/2;i>=1;i--){
+            down(i);
+        }
+
+        while(m-->0){
+            System.out.print(a[1]+" ");
+            a[1]=a[r];
+            r--;
+            down(1);
+        }
+
+    }
+    private static void down(int x){
+        int t=x;
+
+        if (2*x<=r&&a[2*x]<a[x])t=2*x;
+
+        if (2*x+1<=r&&a[2*x+1]<a[t])t=2*x+1;
+
+        if (t!=x){
+            int temp=a[t];
+            a[t]=a[x];
+            a[x]=temp;
+            down(t);
+        }
+    }
+}
