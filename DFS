@@ -1,0 +1,38 @@
+import java.util.Scanner;
+
+public class Main {
+    static int N=100010;
+
+    static int []path=new int[N];
+    static Boolean []vis=new Boolean[N];
+
+    static int n=0;
+
+    public static void main(String[] args) {
+
+        Scanner sc=new Scanner(System.in);
+        n = sc.nextInt();
+
+        dfs(1);
+    }
+
+    private static void dfs(int x) {
+        if (x == n + 1) {
+            for (int j = 1; j <= n; j++) {
+                System.out.print(path[j] + " ");
+            }
+            System.out.println();
+            return;
+        }
+
+        for (int i = 1; i <= n; i++) {
+            if (vis[i] == null) {
+                path[x]=i;
+                vis[i]=true;
+                dfs(x+1);
+                vis[i]=null;
+            }
+        }
+    }
+
+}
