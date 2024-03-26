@@ -3,8 +3,8 @@ import java.util.Scanner;
 public class Main {
     static int N=100010;
 
-    static int []path=new int[N];
-    static Boolean []vis=new Boolean[N];
+    static int []path=new int[N];           //用于存储结果
+    static Boolean []vis=new Boolean[N];            //标记是否访问过
 
     static int n=0;
 
@@ -13,11 +13,11 @@ public class Main {
         Scanner sc=new Scanner(System.in);
         n = sc.nextInt();
 
-        dfs(1);
+        dfs(1);             //递归调用
     }
 
     private static void dfs(int x) {
-        if (x == n + 1) {
+        if (x == n + 1) {               //当x=n+1时，说明已经走完了，输出结果
             for (int j = 1; j <= n; j++) {
                 System.out.print(path[j] + " ");
             }
@@ -25,12 +25,12 @@ public class Main {
             return;
         }
 
-        for (int i = 1; i <= n; i++) {
-            if (vis[i] == null) {
-                path[x]=i;
-                vis[i]=true;
-                dfs(x+1);
-                vis[i]=null;
+        for (int i = 1; i <= n; i++) {                       //遍历每一个位置
+            if (vis[i] == null) {                            //如果没有被访问过，就可以使用这个数
+                path[x]=i;                                      //将这个数填入这个位置
+                vis[i]=true;                                    //标记为已访问
+                dfs(x+1);                                       //递归，逐步填充其他未填充的位置
+                vis[i]=null;                                    //标记为未访问
             }
         }
     }
