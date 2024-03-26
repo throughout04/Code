@@ -7,40 +7,42 @@ public class Main {
 
     static int r=0;
 
+
+//    堆排序：如果需要从小至大排序，就建立小根堆，如果需要从大至小排序，就建立大根堆。因为每次输出的都是最根元素
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int n=scanner.nextInt();
         int m=scanner.nextInt();
 
-        r=n;
+        r=n;            //r表示此时树中还剩几个元素
 
         for (int i=1;i<=n;i++){
-            a[i]=scanner.nextInt();
+            a[i]=scanner.nextInt();         //初始存储a[1]到a[n]的元素
         }
         for (int i=n/2;i>=1;i--){
-            down(i);
+            down(i);                            //建立小根堆，从第一个非叶子结点开始(即从n/2的结点开始)，比n/2小的节点都是非叶子节点
         }
 
-        while(m-->0){
-            System.out.print(a[1]+" ");
-            a[1]=a[r];
-            r--;
-            down(1);
+        while(m-->0){                       //输出m次
+            System.out.print(a[1]+" ");         //因为每次的输出都是最小的元素，所以输出的是a[1]
+            a[1]=a[r];                          //将最后的元素放到a[1]，重新开始调整树
+            r--;                                    //r减一，因为原a[1]已经不在树中了
+            down(1);                    //调整树
         }
 
     }
     private static void down(int x){
-        int t=x;
+        int t=x;                //t表示下标
 
-        if (2*x<=r&&a[2*x]<a[x])t=2*x;
+        if (2*x<=r&&a[2*x]<a[x])t=2*x;          //如果x存在左子树，且左子树比此节点小，就将t指向x的左子树
 
-        if (2*x+1<=r&&a[2*x+1]<a[t])t=2*x+1;
+        if (2*x+1<=r&&a[2*x+1]<a[t])t=2*x+1;        //如果x存在右子树，且右子树比此节点小，就将t指向x的右子树
 
         if (t!=x){
             int temp=a[t];
             a[t]=a[x];
-            a[x]=temp;
-            down(t);
+            a[x]=temp;                                  //交换x和t的值
+            down(t);                                        //继续向下调整新的所指的结点
         }
     }
 }
