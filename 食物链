@@ -11,28 +11,28 @@ public class Main {
         int n = scanner.nextInt();
         int m=scanner.nextInt();
         for(int i=1;i<=n;i++){
-            p[i]=i;
+            p[i]=i;                                         //初始化每个节点的父节点为自己
         }
 
         for (int i = 0; i < m; i++) {
             int op = scanner.nextInt();
             int x = scanner.nextInt();
             int y = scanner.nextInt();
-            if (x>n || y>n)res++;
+            if (x>n || y>n)res++;               //超过节点数，判定为假话
             else {
-                int px=find(x);
-                int py=find(y);
+                int px=find(x);                     //寻找x的父节点
+                int py=find(y);                     //寻找y的父节点
                 if (op == 1) {
-                    if (px == py && (d[x] - d[y])%3!=0) {
+                    if (px == py && (d[x] - d[y])%3!=0) {               //两个节点的父节点相同：x和y在同一集合；且d[x]-d[y]不为3的倍数，即x和y不是一类
                         res++;
-                    }else if (px!=py){
-                        p[px]=p[y];
-                        d[px]=d[y]-d[x];
+                    }else if (px!=py){                                              //如果两个绩点不在同一领域，则合并
+                        p[px]=p[y];                  //将y的父节点设为x的父节点的父节点
+                        d[px]=d[y]-d[x];            //将x的父节点到y父节点的距离等于y到父节点之间的距离减去x到父节点之间的距离。因为x和y为同一群组，即到根节点为相同距离
                     }
                 } else if (op == 2) {
-                    if (px==py&&(d[x]-d[y]-1)%3!=0) {
+                    if (px==py&&(d[x]-d[y]-1)%3!=0) {               //两个节点的父节点相同：x和y在同一集合；且d[x]-d[y]-1不为3的倍数，说明没有构成x吃y的顺序
                         res++;
-                    } else if (px!=py){
+                    } else if (px!=py){                     //如果两个绩点不在同一领域，则合并之后在设置食物链的关系
                         p[px]=p[y];
                         d[px]=d[y]-d[x]+1;
                     }
@@ -42,11 +42,11 @@ public class Main {
         }
         System.out.println(res);
     }
-    private static int find(int x){
+    private static int find(int x){             //寻找x的根节点
         if(x!=p[x]){
-            int t=find(p[x]);
-            d[x]+=d[p[x]];
-            p[x]=t;
+            int t=find(p[x]);                       //寻找x的父节点的根节点
+            d[x]+=d[p[x]];                          //因为比较的是x到根节点的距离，且后面让根节点为x的父节点。所以将x到父节点的距离加上父节点到根节点的距离
+            p[x]=t;                                     //使用父节点作为x的父节点
         }
         return p[x];
     }
