@@ -6,8 +6,8 @@ import static java.lang.Math.abs;
 public class Main {
     static int N=100010;
 
-    static int []path=new int[N];
-    static Boolean []vis=new Boolean[N];
+    static int []path=new int[N];                   //path[i]表示第i行放的皇后的列号
+    static Boolean []vis=new Boolean[N];            //vis[i]表示第i行是否有皇后
 
     static int n=0;
 
@@ -15,17 +15,15 @@ public class Main {
 
         Scanner sc=new Scanner(System.in);
         n = sc.nextInt();
-
-
         dfs(1);
     }
 
     private static void dfs(int x) {
-        if (x == n + 1) {
+        if (x == n + 1) {                       //到达最后一行
             for (int i = 1; i <= n; i++) {
                 for (int j = 1; j <= n; j++) {
-                    if (path[i] == j) {
-                        System.out.print("Q");
+                    if (path[i] == j) {                         //第i行的皇后放在第j列
+                        System.out.print("Q");                  //输出
                     } else {
                         System.out.print(".");
                     }
@@ -37,24 +35,23 @@ public class Main {
         }
 
         for (int i = 1; i <= n; i++) {
-            if (vis[i] == null) {
-                path[x]=i;
-                if (!isvalid(x)){
+            if (vis[i] == null) {                       //第i行没有皇后
+                path[x]=i;                              //第x行的皇后放在第i列
+                if (!isvalid(x)){                        //不满足条件:对角线有皇后
                     // path[x]=0;
-                    continue;
+                    continue;                           //继续下一个位置：同行的其他列
                 }
-                vis[i]=true;
-                dfs(x+1);
+                vis[i]=true;                            //第i列有皇后
+                dfs(x+1);                       //进入下一行
                 vis[i]=null;
 //                path[x]=0;
             }
         }
     }
 
-    private static boolean isvalid(int x) {
-
+    private static boolean isvalid(int x) {                 //判断第x行的皇后是否满足条件
         for (int i = 1; i < x; i++) {
-            if (abs(path[i] - path[x]) == abs(x - i)) {
+            if (abs(path[i] - path[x]) == abs(x - i)) {             //第x行的皇后和第i行的皇后在对角线上
                 return false;
             }
         }
