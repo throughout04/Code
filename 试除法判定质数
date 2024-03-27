@@ -1,0 +1,22 @@
+import java.util.Scanner;
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n=scanner.nextInt();
+        while(n--!=0){
+            int x=scanner.nextInt();
+            if (isPrime(x)) System.out.println("Yes");
+            else System.out.println("No");
+        }
+    }
+
+    private static Boolean isPrime(int a) {
+        if (a<2)return false;
+        for (int i=2;i<=a/i;i++){
+            if (a%i==0)return false;
+        }
+        return true;
+    }
+}
